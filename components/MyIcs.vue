@@ -1,0 +1,43 @@
+<template>
+  <div>
+    <button @click="initIcs">RDV</button>
+  </div>
+</template>
+
+<script>
+import { VCALENDAR, VEVENT } from 'ics-js';
+
+export default {
+  name: 'MyIcs',
+  methods: {
+    initIcs () {
+      const cal = new VCALENDAR();
+      const event = new VEVENT();
+      event.addProp('UID');
+      event.addProp('DTSTAMP', new Date('2021-11-02 10:00:00'), { VALUE: 'DATE-TIME' });
+      event.addProp('DTSTART', new Date('2021-11-02 11:00:00'), { VALUE: 'DATE-TIME' });
+      event.addProp('DTEND', new Date('2021-11-02 12:00:00'), { VALUE: 'DATE-TIME' });
+      event.addProp('ATTENDEE', null, {
+        CN: 'ArteBeaute',
+        RSVP: 'FALSE:mailto:matheo@artebeaute.com',
+        Title: 'Coucou'
+      });
+
+      cal.addProp('VERSION', 2);
+      cal.addProp('PRODID', 'XYZ Corp');
+      cal.addComponent(event);
+      cal.toString();
+      console.log(cal.toString())
+
+      // Sauvegarde du fichier
+      const FileSaver = require('file-saver');
+      const file = new File([cal.toString()], "hello-world.ics", {type: "text/plain;charset=utf-8"});
+      FileSaver.saveAs(file);
+    }
+  }
+}
+</script>
+
+<style scoped>
+
+</style>
